@@ -27,10 +27,3 @@ lemma ex1: "(\<exists>x::int. \<forall>y::int. x \<le> y) \<longrightarrow> (\<f
   apply (assumption)
   done
 
-lemma ex2: "(\<exists>x::int. \<forall>y::int. x \<le> y) \<longrightarrow> (\<forall>x::int. \<exists>y::int. y \<le> x)"
-  apply (rule impI)
-  apply (rule allI)
-(* why can't we use this?
-  apply (rule exI)
-*)
-  oops
