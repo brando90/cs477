@@ -45,4 +45,24 @@ lemma ex2: "(\<forall>x.\<forall>y. P x \<longrightarrow> Q y) \<longrightarrow>
   apply assumption
   done
 
-(* TODO do same proof as above but let isabelle unify for you*)
+(* TODO do same proof as above but let isabelle unify for you *)
+
+lemma ex3: "(\<forall>x. \<forall>y. P x \<and> P y) \<longrightarrow> ( (\<forall> x. P x) \<and> (\<forall>y. P y) )"
+  apply (rule impI)
+  thm conjI
+  apply (rule conjI)
+   apply (rule allI)
+   apply (rule_tac P = "\<lambda> x. \<forall>y. P x \<and> P y" and x = "x" in allE)
+    apply assumption
+   apply (rule_tac P = "\<lambda>y. P x \<and> P y" and x = "x" in allE)
+    apply assumption
+   apply (erule conjE)
+   apply assumption
+  apply (rule allI)
+  apply (rule_tac P = "\<lambda>x. \<forall> y. P x \<and> P y" and x = "y" in allE)
+   apply assumption
+  apply (rule_tac P = "\<lambda>ya. P y \<and> P ya" and x = "y" in allE)
+   apply assumption
+  apply (erule conjE)
+  apply assumption
+
