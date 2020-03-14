@@ -7,6 +7,8 @@ thm allI
 thm exE
 thm allE
 
+thm impE
+
 (*
 exI: ?P ?x \<Longrightarrow> \<exists>x. ?P x
 allI: (\<And>x. ?P x) \<Longrightarrow> \<forall>x. ?P x
@@ -27,10 +29,20 @@ lemma ex1: "(\<exists>x::int. \<forall>y::int. x \<le> y) \<longrightarrow> (\<f
   apply (assumption)
   done
 
-lemma ex2: "(\<exists>x::int. \<forall>y::int. x \<le> y) \<longrightarrow> (\<forall>x::int. \<exists>y::int. y \<le> x)"
+lemma ex2: "(\<forall>x.\<forall>y. P x \<longrightarrow> Q y) \<longrightarrow> ( (\<exists>x. P x)\<longrightarrow>(\<forall>y. Q y) )"
   apply (rule impI)
-  apply (rule allI)
-(* why can't we use this?
-  apply (rule exI)
-*)
-  oops
+  apply (rule impI)
+  apply (rule allI) (* introduces \<and>y for Q y in final goal *)
+  apply (rule_tac P = "\<lambda>x. P x" in exE) (* introduces \<and>x for the existential to have P x *)
+   apply assumption
+  apply (rule_tac P = "\<lambda>x. \<forall>y. P x \<longrightarrow> Q y" and x = "x" in allE)
+   apply assumption
+  apply (rule_tac P = "\<lambda>y. P x \<longrightarrow> Q y" and x = "y" in allE)
+  (* apply (rule allE) *)
+   apply assumption
+  apply (erule impE)
+   apply assumption
+  apply assumption
+  done
+
+(* TODO do same proof as above but let isabelle unify for you*)
